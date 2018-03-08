@@ -11,6 +11,14 @@ class View:
         self.app_name = app_name
         self.webapp = webapp
 
+    @classmethod
+    def get_context(cls): # TODO: build the context properly
+        return cls
+
+    @classmethod 
+    def get_app_route(cls):
+        return 'localhost:8080/{}/'.format(cls.router.namespace)
+
 
 class TemplateView(View):
 
@@ -24,10 +32,12 @@ class TemplateView(View):
 
 class WebsocketView(View):
 
+    ws_handler_route = 'ws/'
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         router = self.router
-        router.route('/ws')(self.websocket_handler)
+        router.route(self.ws_handler_route)(self.websocket_handler)
 
     async def websocket_handler(self, request):
         ws = web.WebSocketResponse()

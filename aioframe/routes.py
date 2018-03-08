@@ -13,4 +13,5 @@ class Router:
 
     def get_routes(self, app):
         for route_name, view in self.routes.items():
+            print(route_name)
             app.router.add_get(route_name, view)
