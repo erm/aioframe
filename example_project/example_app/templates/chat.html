@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Websocket view example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+  <h1>Connection: <span id="status"></span></h1>
+  <div id="messages"></div>
+  <input id="message_input"></input>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        var status = $('#status');
+        var ws = new WebSocket("ws://localhost:8080/ws");
+        $('#message_input').on('keypress', function(e) {
+            if(e.which == 13) {
+              var msg = $('#message_input').val();
+              ws.send(msg);
+              $('#message_input').val('');
+            }
+        });
+        ws.onopen = function(msg) {
+            console.log('Connected.');
+            status.text('Connected.');
+        };
+        ws.onmessage = function(msg) {
+            console.log(msg);
+            new_msg = '<p>'+msg.data+'</p>'
+            $("#messages").append(new_msg);
+        };
+        ws.onclose = function(msg) {
+            status.text('Disconnected.');
+            console.log('Disconnected.');
+        }
+        ws.error = function(err) {
+            status.text(err);
+            console.log(err); 
+        }
+      });
+    </script>
+</body>
+</html>

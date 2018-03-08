@@ -1,21 +1,34 @@
-from aiohttp import web
+from aiohttp import web, WSMsgType
+from aiohttp_jinja2 import template
 
+from aioframe.views import TemplateView
 from aioframe.routes import Router
 
 
-class MyAppView:
+class WebsocketView(TemplateView):
 
-    router = Router(namespace='myappview')
+    router = Router(namespace=None)
 
-    @router.route('somepath/')
-    def somepath(request, *args, **kwargs):
-        # GET = request.rel_url.query
-        # print(GET)
-        return web.Response(text="some app path")
+    @router.route('/ws')
+    async def websocket_handler(request):
+        ws = web.WebSocketResponse()
+        await ws.prepare(request)
+        async for msg in ws:
+            if msg.type == WSMsgType.TEXT:
+                print(msg)
+                if msg.data == 'close':
+                    await ws.close()
+                else:
+                    reply = 'You said: {}'.format(msg.data)
+                    await ws.send_str(reply)
+            elif msg.type == WSMsgType.ERROR:
+                print(ws.exception())
+        return ws
 
-    @router.route('somepath/otherpath/')
-    def someotherpath(request, *args, **kwargs):
-        return web.Response(text="some other app path")
+    @router.route('/chat')
+    @template('chat.html')
+    def chat(request, *args, **kwargs):
+        return {}
 
-# TODO: Change how this works to allow multiple app_views
-app_views = MyAppView()
+
+app_views = WebsocketView
