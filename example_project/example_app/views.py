@@ -7,7 +7,6 @@ from aioframe.routes import Router
 
 class ChatView(TemplateView, WebsocketView):
 
-
     router = Router(namespace=None)
 
     @router.route('/chat')
