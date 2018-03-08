@@ -5,7 +5,6 @@ from aioframe.views import TemplateView, WebsocketView
 from aioframe.routes import Router
 
 
-
 class ChatView(TemplateView, WebsocketView):
 
     router = Router(namespace='chat')
