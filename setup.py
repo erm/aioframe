@@ -9,6 +9,7 @@ setup(
     packages=['aioframe'],
     install_requires=[
         'aiohttp',
+        'aiohttp-jinja2',
     ],
     license='MIT License',
     author='Jordan E.',
