@@ -1,18 +1,24 @@
-from aiohttp import web, WSMsgType
 from aiohttp_jinja2 import render_template
 
 from aioframe.views import TemplateView, WebsocketView
-from aioframe.routes import Router
+
+from .app_conf import app
 
 
 class ChatView(TemplateView, WebsocketView):
 
-    router = Router(namespace='chat')
-
-    @router.route('msg/')
+    @app.route('msg/')
     def chat(request, *args, **kwargs):
-        ctx = __class__.get_context()
-        ws_route = '{}{}'.format(ctx.get_app_route(), ctx.ws_handler_route)
+        ws_route = 'localhost:8080/chat/ws/' # TODO: Get from context data
         return render_template('chat.html', request, {'ws_route': ws_route})
 
-app_views = ChatView
+
+class OtherChatView(TemplateView, WebsocketView):
+
+    @app.route('msg2/')
+    def chat(request, *args, **kwargs):
+        ws_route = 'localhost:8080/chat/ws/' # TODO: Get from context data
+        return render_template('chat.html', request, {'ws_route': ws_route})
+
+
+app_views = [ChatView, OtherChatView]
