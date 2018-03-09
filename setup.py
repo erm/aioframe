@@ -10,6 +10,8 @@ setup(
     install_requires=[
         'aiohttp',
         'aiohttp-jinja2',
+        'aiohttp_session',
+        'cryptography',
     ],
     license='MIT License',
     author='Jordan E.',
