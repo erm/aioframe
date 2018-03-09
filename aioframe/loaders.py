@@ -3,6 +3,7 @@ from importlib import import_module
 from pkgutil import walk_packages
 
 from .exceptions import AppModuleImportError
+from .apps import register
 
 
 def get_apps_enabled(apps_registry):
@@ -20,10 +21,17 @@ def get_app_modules(app_name):
     app_module = sys.modules[app_name]
     sub_modules = {}
     for importer, name, is_pkg in walk_packages(app_module.__path__):
+        module_pkg = '{}.{}'.format(app_name, name)
         try:
-            module_pkg = '{}.{}'.format(app_name, name)
             sub_module = import_module(module_pkg)
             sub_modules[name] = sub_module
         except ImportError as e:
-            raise AppModuleImportError('{}: {}'.format(_module, e))
+            raise AppModuleImportError('{}: {}'.format(module_pkg, e))
     return [sub_modules.keys()]
+
+
+def load_apps_enabled(apps_enabled, webapp):
+    for app_name, app_module in apps_enabled.items():
+        for view in app_module.views.app_views:
+            register(app_module.app_conf.app, webapp)(view)()
+        app_module.app_conf.app.load_routes(webapp)

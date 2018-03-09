@@ -2,44 +2,26 @@ import aiohttp_jinja2
 from aiohttp import web, WSMsgType
 import jinja2
 
-from aioframe.routes import Router
 
-
-class View:
-
-    def __init__(self, app_name, webapp):
-        self.app_name = app_name
-        self.webapp = webapp
-
-    @classmethod
-    def get_context(cls): # TODO: build the context properly
-        return cls
-
-    @classmethod 
-    def get_app_route(cls):
-        return 'localhost:8080/{}/'.format(cls.router.namespace)
-
-
-class TemplateView(View):
+class TemplateView:
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         aiohttp_jinja2.setup(
-            self.webapp, 
-            loader=jinja2.PackageLoader(self.app_name, 'templates')
+            self.webapp,
+            loader=jinja2.PackageLoader(self.app.app_name, 'templates')
         )
 
 
-class WebsocketView(View):
+class WebsocketView:
 
     ws_handler_route = 'ws/'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        router = self.router
-        router.route(self.ws_handler_route)(self.websocket_handler)
+        self.app.route(self.ws_handler_route)(self.ws_handler)
 
-    async def websocket_handler(self, request):
+    async def ws_handler(self, request):
         ws = web.WebSocketResponse()
         await ws.prepare(request)
         async for msg in ws:
