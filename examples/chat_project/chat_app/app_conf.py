@@ -2,6 +2,6 @@ from aioframe.apps import AppConf
 
 
 app = AppConf(
-    'chatroom',
-    namespace='chat',
+    'chat_app',
+    namespace='chat_app',
 )

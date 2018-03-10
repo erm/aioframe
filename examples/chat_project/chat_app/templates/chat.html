@@ -1,14 +1,18 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>Websocket view example</title>
+    <title>{{ title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
-  <h1>Connection: <span id="status"></span></h1>
-  <div id="messages"></div>
-  <input id="message_input"></input>
+  <h1>{{ title }}</h1>
+  <h3>Status: <span id="status"></span></h3>
+  <div style="border: 1px solid black;">
+    <div id="messages"></div>
+  </div>
+  <br>
+  <strong style="color: blue;">{{ user }}</strong><input id="message_input"></input>
     <script type="text/javascript">
       $(document).ready(function() {
         var status = $('#status');

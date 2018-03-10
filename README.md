@@ -2,11 +2,11 @@
 
 A web framework written using aiohttp.
 
-# todo 
+# Todo 
 
-- Automatic project reloading
-- Templates
-- Dynamic app views loading (maybe)
-- Base classes for common request handling
-- Database models
-- Lots of stuff
+- Sessions
+- Helper methods for apps
+- Database
+- Middlewares
+- More bots
+- Deploy script
