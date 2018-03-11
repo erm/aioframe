@@ -1,3 +1,6 @@
+{% if form_errors %}
+{{ form_errors }}
+{% endif %}
 <form action="/testauth/login/" method="post" accept-charset="utf-8"
       enctype="application/x-www-form-urlencoded">
 
