@@ -8,7 +8,7 @@ def run_command(conf):
     app_models += [User, UserPermission]
     database = conf.DATABASE
     if app_models:
-        database.create_tables(app_models)
-        print('Tables created.')
+        database.drop_tables(app_models)
+        print('Tables dropped.')
     else:
         print('No models provided.')

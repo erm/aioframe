@@ -1,5 +1,10 @@
-# import peewee
+import peewee
 
 
-# class Model(peewee.Model):
-#     id = peewee.IntegerField()
+DATABASE_PROXY = peewee.Proxy()
+
+
+class BaseModel(peewee.Model):
+
+    class Meta:
+        database = DATABASE_PROXY

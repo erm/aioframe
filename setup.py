@@ -16,7 +16,8 @@ setup(
         'peewee',
         'peewee-async',
         'aiopg',
-        'psycopg2-binary'
+        'psycopg2-binary',
+        'passlib'
     ],
     license='MIT License',
     author='Jordan E.',

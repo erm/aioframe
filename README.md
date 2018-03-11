@@ -4,11 +4,11 @@ A web framework written using aiohttp.
 
 # Todo 
 
-- Tests
-- Helper methods
 - Auth backend
+- Helper methods
 - Base models
 - Query helper methods
 - Multiple database choices
 - More bots
 - Deploy script
+- Tests

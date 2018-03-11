@@ -1,3 +1,6 @@
+import base64
+import os
+
 import aiohttp_session
 
 from .exceptions import SessionStorageDoesNotExist, SessionSecretKeyDoesNotExist
@@ -31,3 +34,6 @@ def get_session_storage(storage_name, secret_key=None, redis_host='localhost', r
         return get_redis_storage(redis_host, redis_port)
     raise SessionStorageDoesNotExist(storage_name)
 
+
+def generate_session_id(num_bytes=16):
+    return base64.b64encode(os.urandom(num_bytes))

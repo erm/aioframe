@@ -4,8 +4,11 @@ import asyncio
 import peewee
 import peewee_async
 
+
 from aioframe.secrets import get_secret_key
 from aioframe.sessions import get_session_storage
+from aioframe.models import DATABASE_PROXY
+
 
 # Project
 
@@ -37,4 +40,8 @@ PORT = '8000'
 # Database
 
 DATABASE = peewee_async.PostgresqlDatabase('test')
-OBJECTS = peewee_async.Manager(DATABASE)
+DATABASE_PROXY.initialize(DATABASE)
+OBJECTS = peewee_async.Manager(DATABASE_PROXY)
+
+
+# .create_table(True)
