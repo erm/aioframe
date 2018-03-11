@@ -30,8 +30,24 @@ def get_app_modules(app_name):
     return [sub_modules.keys()]
 
 
-def load_apps_enabled(apps_enabled, webapp):
+def load_apps_enabled(webapp, conf):
+    apps_enabled = get_apps_enabled(conf.APPS_REGISTRY)
     for app_name, app_module in apps_enabled.items():
-        for view in app_module.views.app_views:
+        try:
+            app_views = app_module.views.app_views
+        except AttributeError:
+            continue
+        for view in app_views:
             register(app_module.app_conf.app, webapp)(view)()
         app_module.app_conf.app.load_routes(webapp)
+
+
+def get_app_models(apps_enabled):
+    models = []
+    for app in apps_enabled.values():
+        try:
+            app_models = app.models.app_models
+        except AttributeError:
+            continue
+        models += app_models
+    return models

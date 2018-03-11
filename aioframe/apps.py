@@ -16,13 +16,16 @@ class AppConf:
         self.namespace = namespace
         self.views = {}
 
-    def route(self, name):
+    def route(self, name, methods=['GET']):
         def _route(func):
             route_name = '/{}/{}'.format(self.namespace, name) if self.namespace else name
-            self.views[route_name] = func
+            self.views[route_name] = {'view_func': func, 'methods': methods}
             return func
         return _route
 
     def load_routes(self, webapp):
         for route_name, view in self.views.items():
-            webapp.router.add_get(route_name, view)
+            view_func = view['view_func']
+            methods = view['methods']
+            for method in methods:
+                webapp.router.add_route(method, route_name, view_func)

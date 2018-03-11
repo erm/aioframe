@@ -11,7 +11,12 @@ setup(
         'aiohttp',
         'aiohttp-jinja2',
         'aiohttp_session',
+        'aioredis',
         'cryptography',
+        'peewee',
+        'peewee-async',
+        'aiopg',
+        'psycopg2-binary'
     ],
     license='MIT License',
     author='Jordan E.',
