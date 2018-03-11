@@ -1,3 +1,5 @@
+import peewee_async
+
 HOSTNAME = 'localhost'
 
 PORT = '8080'
