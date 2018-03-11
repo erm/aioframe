@@ -4,11 +4,9 @@ import asyncio
 import peewee
 import peewee_async
 
-
 from aioframe.secrets import get_secret_key
 from aioframe.sessions import get_session_storage
 from aioframe.models import DATABASE_PROXY
-
 
 # Project
 
@@ -26,10 +24,7 @@ SESSION_STORAGE = get_session_storage('encrypted_cookie', secret_key=SECRET_KEY)
 # Apps
 
 APPS_REGISTRY = (
-    'chat_app',
-    'testauth',
-
-
+    'aioframe.auth',
 )
 
 # Server
@@ -49,9 +44,3 @@ DATABASE = peewee_async.PooledPostgresqlDatabase(
 )
 DATABASE_PROXY.initialize(DATABASE)
 OBJECTS = peewee_async.Manager(DATABASE_PROXY)
-
-
-# Auth
-
-# LOGIN_REDIRECT
-# LOGOUT_REDIRECT

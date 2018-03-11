@@ -9,6 +9,7 @@ from .apps import register
 def get_apps_enabled(apps_registry):
     apps_enabled = {}
     for app_name in apps_registry:
+        print(app_name)
         try:
             app_module = import_module(app_name)
         except ImportError as e:

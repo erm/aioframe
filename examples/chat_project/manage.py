@@ -21,5 +21,3 @@ if __name__ == "__main__":
         createdb.run_command(conf)
     if command == 'dropdb':
         dropdb.run_command(conf)
-
-# TODO: Improve the command structure generally and generate manage file in project
