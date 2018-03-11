@@ -20,8 +20,8 @@ SESSION_STORAGE = get_session_storage('encrypted_cookie', secret_key=SECRET_KEY)
 # Apps
 
 APPS_REGISTRY = (
-    'chat_app',
-    'testauth',
+    'chat',
+    'auth',
 )
 
 # Server
@@ -45,6 +45,6 @@ OBJECTS = peewee_async.Manager(DATABASE_PROXY)
 
 # Auth
 
-LOGIN_REDIRECT_URL = 'testauth/dashboard/'
-LOGOUT_REDIRECT_URL = 'testauth/login/'
-LOGIN_URL = 'testauth/login/'
+LOGIN_REDIRECT_URL = 'auth/dashboard/'
+LOGOUT_REDIRECT_URL = 'auth/login/'
+LOGIN_URL = 'auth/login/'

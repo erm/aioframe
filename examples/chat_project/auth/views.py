@@ -21,15 +21,15 @@ class Auth(TemplateView):
             password = data['password']
             res = await authenticate(session, conf, username, password)
             if not res['form_errors']:
-                raise aiohttp.web.HTTPFound('/testauth/dashboard/')
+                raise aiohttp.web.HTTPFound('/auth/dashboard/')
             session['form_errors'] = res['form_errors']
         context = {'form_errors': session.pop('form_errors', None)}
-        return render_template('login.html', request, context)
+        return render_template('auth/login.html', request, context)
 
     @app.route('dashboard/')
     @login_required
     async def dashboard(request, *args, **kwargs):
         context = {'user': 'test'}
-        return render_template('dashboard.html', request, context)
+        return render_template('auth/dashboard.html', request, context)
 
 app_views = [Auth]

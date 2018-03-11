@@ -2,6 +2,7 @@ import aiohttp
 from aiohttp_jinja2 import render_template
 from aiohttp_session import get_session
 
+from aioframe.auth.utils import login_required
 from aioframe.views import TemplateView, WebsocketView
 from aioframe.clients import get_request
 
@@ -17,7 +18,6 @@ class ChatRoom(WebsocketView, TemplateView):
     async def ws_handler(request, *args, **kwargs):
         response, ws_group = await __class__.get_ws_response(request)
         session = await get_session(request)
-        # TODO: Implement sessions properly/user accounts
         async for msg in response:
             if msg.type == aiohttp.web.WSMsgType.TEXT:
                 for ws in ws_group['sockets']:
@@ -27,16 +27,17 @@ class ChatRoom(WebsocketView, TemplateView):
         return response
 
     @app.route('rooms/{group_name}/')
+    @login_required
     async def room(request, *args, **kwargs):
         group_name = request._match_info['group_name']
-        ws_route = '{}:{}/chat_app/rooms/ws/{}/'.format(HOSTNAME, PORT, group_name)
+        ws_route = '{}:{}/chat/rooms/ws/{}/'.format(HOSTNAME, PORT, group_name)
         session = await get_session(request)
         context = {
             'ws_route': ws_route,
             'title': 'Chatroom {}'.format(group_name),
             'user': '(User #{}) '.format(session.created)
         }
-        return render_template('chat.html', request, context)
+        return render_template('chat/chat.html', request, context)
 
 
 class MarkovBot(WebsocketView, TemplateView):
@@ -83,12 +84,12 @@ class MarkovBot(WebsocketView, TemplateView):
     def markov(request, *args, **kwargs):
         group_name = request._match_info['group_name']
         # TODO: Implement method for building app routes
-        ws_route = '{}:{}/chat_app/bots/markov/ws/{}/'.format(HOSTNAME, PORT, group_name)
+        ws_route = '{}:{}/chat/bots/markov/ws/{}/'.format(HOSTNAME, PORT, group_name)
         context = {
             'ws_route': ws_route,
             'title': 'MarkovBot {}'.format(group_name)
         }
-        return render_template('chat.html', request, context)
+        return render_template('chat/chat.html', request, context)
 
 
 app_views = [ChatRoom, MarkovBot]

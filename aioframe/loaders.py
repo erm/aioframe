@@ -39,7 +39,7 @@ def load_apps_enabled(webapp, conf):
         except AttributeError:
             continue
         for view in app_views:
-            register(app_module.app_conf.app, webapp)(view)()
+            register(app_module.app_conf.app, webapp, conf)(view)()
         app_module.app_conf.app.load_routes(webapp)
 
 

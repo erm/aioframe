@@ -1,9 +1,10 @@
-def register(app, webapp):
+def register(app, webapp, conf):
     def wrapper(view_class):
         class ViewClass(view_class):
             def __init__(self, *args, **kwargs):
                 self.app = app
                 self.webapp = webapp
+                self.conf = conf
                 super(ViewClass, self).__init__(*args, **kwargs)
         return ViewClass
     return wrapper

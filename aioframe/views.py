@@ -1,3 +1,5 @@
+import os
+
 import aiohttp_jinja2
 from aiohttp import web
 import jinja2
@@ -6,9 +8,10 @@ import jinja2
 class TemplateView:
 
     def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         aiohttp_jinja2.setup(
             self.webapp,
-            loader=jinja2.PackageLoader(self.app.app_name, 'templates')
+            loader=jinja2.FileSystemLoader(os.path.join(self.conf.APPS_DIR, 'templates'))
         )
 
 
