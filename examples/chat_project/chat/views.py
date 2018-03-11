@@ -2,7 +2,7 @@ import aiohttp
 from aiohttp_jinja2 import render_template
 from aiohttp_session import get_session
 
-from aioframe.auth.utils import login_required
+from aioframe.auth.utils import login_required, get_user_by_session
 from aioframe.views import TemplateView, WebsocketView
 from aioframe.clients import get_request
 
@@ -15,14 +15,15 @@ from .app_conf import app
 class ChatRoom(WebsocketView, TemplateView):
 
     @app.route('rooms/ws/{group_name}/')
+    @login_required
     async def ws_handler(request, *args, **kwargs):
         response, ws_group = await __class__.get_ws_response(request)
         session = await get_session(request)
         async for msg in response:
             if msg.type == aiohttp.web.WSMsgType.TEXT:
                 for ws in ws_group['sockets']:
-                    name = '(You)' if ws is response else ''
-                    msg_resp = 'User #{} {}: {}'.format(session.created, name, msg.data)
+                    user = await get_user_by_session(session)
+                    msg_resp = '{}: {}'.format(user.username, msg.data)
                     await ws.send_str(msg_resp)
         return response
 
@@ -32,10 +33,11 @@ class ChatRoom(WebsocketView, TemplateView):
         group_name = request._match_info['group_name']
         ws_route = '{}:{}/chat/rooms/ws/{}/'.format(HOSTNAME, PORT, group_name)
         session = await get_session(request)
+        user = await get_user_by_session(session)
         context = {
             'ws_route': ws_route,
             'title': 'Chatroom {}'.format(group_name),
-            'user': '(User #{}) '.format(session.created)
+            'user': '<{}>'.format(user.username)
         }
         return render_template('chat/chat.html', request, context)
 
