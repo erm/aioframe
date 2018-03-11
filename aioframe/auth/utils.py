@@ -47,3 +47,8 @@ def login_required(func):
         response = await func(request, *args, **kwargs)
         return response
     return _login_required
+
+
+def create_user(username, password):
+    password = sha256_crypt.hash(password)
+    user = User.create(username=username, password=password, is_superuser=False, is_active=True)

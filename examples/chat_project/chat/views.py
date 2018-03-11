@@ -58,6 +58,8 @@ class MarkovBot(WebsocketView, TemplateView):
             ws_group_data = ws_group['data']
             # TODO: Properly implement command parsing/handling
             if msg.type == aiohttp.web.WSMsgType.TEXT:
+                if not msg.data:
+                    msg_data = 'test'
                 msg_data = msg.data.split()
                 if msg_data[0] == 'getsrc' and ws_group_data:
                     src_url = ws_group_data['src_url']
