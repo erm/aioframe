@@ -39,9 +39,11 @@ PORT = '8000'
 
 # Database
 
-DATABASE = peewee_async.PostgresqlDatabase('test')
+DATABASE = peewee_async.PooledPostgresqlDatabase(
+    'test',
+    user='',
+    password='',
+    host='localhost'
+)
 DATABASE_PROXY.initialize(DATABASE)
 OBJECTS = peewee_async.Manager(DATABASE_PROXY)
-
-
-# .create_table(True)

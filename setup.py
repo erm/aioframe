@@ -13,11 +13,11 @@ setup(
         'aiohttp_session',
         'aioredis',
         'cryptography',
-        'peewee',
+        'peewee==2.10.2',
         'peewee-async',
         'aiopg',
         'psycopg2-binary',
-        'passlib'
+        'passlib',
     ],
     license='MIT License',
     author='Jordan E.',
