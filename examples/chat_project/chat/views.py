@@ -27,33 +27,34 @@ class ChatBot:
             command = data[0]
         except IndexError:
             response['msg'] = response['msg'] = 'Error: Not enough arguments.'
-        args = data[1:]
-        if command == 'markovify':
-            try:
-                src_url = args[0]
-            except IndexError:
-                response['msg'] = 'Error: Not enough arguments.'
-            else:
-                try:
-                    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as session:
-                        text = await get_request(session, src_url)
-                        text_model = markovify.Text(text)
-                        self.data['markov'] = text_model
-                except aiohttp.client_exceptions.InvalidURL:
-                    response['msg'] = 'Error: Invalid URL provided.'
-                else:
-                    response['msg'] = 'Loaded data from {}'.format(src_url)
-        elif command == 'talk':
-            markov = self.data.get('markov')
-            if not markov:
-                response['msg'] = 'Error: No data loaded, try !markovify <http://source.txt>'
-            else:
-                sentences = [markov.make_sentence() for i in range(10)]
-                sentences = list(set([s for s in sentences if s]))
-                markov_msg = random.choice(sentences)
-                response['msg'] = markov_msg
         else:
-            response['msg'] = 'Error: valid commands are "markovify" and "talk"'
+            args = data[1:]
+            if command == 'markovify':
+                try:
+                    src_url = args[0]
+                except IndexError:
+                    response['msg'] = 'Error: Not enough arguments.'
+                else:
+                    try:
+                        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as session:
+                            text = await get_request(session, src_url)
+                            text_model = markovify.Text(text)
+                            self.data['markov'] = text_model
+                    except aiohttp.client_exceptions.InvalidURL:
+                        response['msg'] = 'Error: Invalid URL provided.'
+                    else:
+                        response['msg'] = 'Loaded data from {}'.format(src_url)
+            elif command == 'talk':
+                markov = self.data.get('markov')
+                if not markov:
+                    response['msg'] = 'Error: No data loaded, try !markovify <http://source.txt>'
+                else:
+                    sentences = [markov.make_sentence() for i in range(10)]
+                    sentences = list(set([s for s in sentences if s]))
+                    markov_msg = random.choice(sentences)
+                    response['msg'] = markov_msg
+            else:
+                response['msg'] = 'Error: valid commands are "markovify" and "talk"'
         return response
 
 
