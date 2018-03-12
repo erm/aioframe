@@ -3,13 +3,12 @@ from importlib import import_module
 from pkgutil import walk_packages
 
 from .exceptions import AppModuleImportError
-from .apps import register
+from .apps import register_view
 
 
 def get_apps_enabled(apps_registry):
     apps_enabled = {}
     for app_name in apps_registry:
-        print(app_name)
         try:
             app_module = import_module(app_name)
         except ImportError as e:
@@ -39,7 +38,7 @@ def load_apps_enabled(webapp, conf):
         except AttributeError:
             continue
         for view in app_views:
-            register(app_module.app_conf.app, webapp, conf)(view)()
+            register_view(app_module.app_conf.app, webapp, conf)(view)()
         app_module.app_conf.app.load_routes(webapp)
 
 

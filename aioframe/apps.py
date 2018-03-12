@@ -1,4 +1,4 @@
-def register(app, webapp, conf):
+def register_view(app, webapp, conf):
     def wrapper(view_class):
         class ViewClass(view_class):
             def __init__(self, *args, **kwargs):

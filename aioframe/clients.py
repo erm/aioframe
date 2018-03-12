@@ -7,6 +7,7 @@ async def get_request(session, url):
             assert 200 == resp.status, ('Request failed.')
             result = await resp.text()
             return result
-    except aiohttp.client_exceptions.ClientConnectorError:
+    except aiohttp.client_exceptions.ClientConnectorError as e:
+        print(e)
         print('Session connection error.')
         return None

@@ -29,7 +29,7 @@ class WebsocketView:
         try:
             request.app['socket_groups'][group_name]
         except KeyError:
-            request.app['socket_groups'][group_name] = {'sockets': [], 'data': {}}
+            request.app['socket_groups'][group_name] = {'name': group_name, 'sockets': [], 'data': {}, 'bot': None}
         return request.app['socket_groups'][group_name]
 
     @classmethod

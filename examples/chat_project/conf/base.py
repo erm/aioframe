@@ -21,7 +21,7 @@ SESSION_STORAGE = get_session_storage('encrypted_cookie', secret_key=SECRET_KEY)
 
 APPS_REGISTRY = (
     'chat',
-    'auth'
+    'auth',
 )
 
 # Server

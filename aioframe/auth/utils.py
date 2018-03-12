@@ -6,21 +6,30 @@ from .models import User
 from ..sessions import generate_session_id
 
 
-async def get_user_by_session(session):
+async def get_identity(session):
     identity = session.get('AIOFRAME_AUTH_IDENTITY')
     if not identity:
-        raise aiohttp.web.HTTPForbidden
-    user_id = identity['user_id']
-    try:
-        user = User.get(id=user_id)
-    except User.DoesNotExist:
-        raise aiohttp.web.HTTPForbidden
+        session_id = generate_session_id()
+        identity = {
+            '_session_id': session_id.decode('utf-8').replace("'", '"'),
+            'user_id': None 
+        }
+        session['AIOFRAME_AUTH_IDENTITY'] = identity
+    return identity
+
+
+async def get_user_by_session(session):
+    identity = await get_identity(session)
+    user = None
+    if identity['user_id']:
+        try:
+            user = User.get(id=user_id)
+        except User.DoesNotExist:
+            user = None
     return user
 
 
 async def authenticate(session, conf, username, password):
-    if session.get('AIOFRAME_AUTH_IDENTITY'):
-        raise aiohttp.web.HTTPFound(conf.LOGIN_REDIRECT_URL)
     res = {'form_errors': None}
     try:
         user = User.get(username=username)
