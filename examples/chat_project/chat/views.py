@@ -2,7 +2,7 @@ import aiohttp
 from aiohttp_jinja2 import render_template
 from aiohttp_session import get_session
 
-from aioframe.auth.utils import login_required, get_user_by_session, get_identity
+from aioframe.auth.utils import get_user_by_session, get_identity
 from aioframe.views import TemplateView, WebsocketView
 from aioframe.clients import get_request
 
@@ -57,11 +57,10 @@ class ChatBot:
                 response['msg'] = 'Error: valid commands are "markovify" and "talk"'
         return response
 
-
+@app.route_class('chat/')
 class ChatRoom(WebsocketView, TemplateView):
 
-    @classmethod
-    async def get_bot_handler(cls, ws_group, msg_data):
+    async def get_bot_handler(self, ws_group, msg_data):
         bot = ws_group['bot']
         if not bot:
             bot = ws_group['bot'] = ChatBot(ws_group)
@@ -69,14 +68,15 @@ class ChatRoom(WebsocketView, TemplateView):
         return response
 
     @app.route('rooms/ws/{group_name}/')
-    async def ws_handler(request, *args, **kwargs):
-        response, ws_group = await __class__.get_ws_response(request)
+    async def ws_handler(self, *args, **kwargs):
+        request = self._request
+        response, ws_group = await self.get_ws_response()
         session = await get_session(request)
         async for msg in response:
             if msg.type == aiohttp.web.WSMsgType.TEXT:
                 msg_data = msg.data 
                 if msg_data and msg_data[0] == '!':
-                    bot_res = await __class__.get_bot_handler(ws_group, msg_data)
+                    bot_res = await self.get_bot_handler(ws_group, msg_data)
                     msg_resp = bot_res['msg']
                 else:
                     identity = await get_identity(session)
@@ -87,9 +87,10 @@ class ChatRoom(WebsocketView, TemplateView):
         return response
 
     @app.route('rooms/{group_name}/')
-    async def room(request, *args, **kwargs):
+    async def room(self, *args, **kwargs):
+        request = self._request
         group_name = request._match_info['group_name']
-        ws_route = '{}:{}/chat/rooms/ws/{}/'.format(HOSTNAME, PORT, group_name)
+        ws_route = '{}:{}/rooms/ws/{}/'.format(HOSTNAME, PORT, group_name)
         session = await get_session(request)
         # user = await get_user_by_session(session)
         identity = await get_identity(session)
