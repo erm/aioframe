@@ -1,5 +1,7 @@
 import os
 
+from .apps.routes import get_reverse_match
+
 import aiohttp_jinja2
 from aiohttp import web
 import jinja2
@@ -7,16 +9,18 @@ import jinja2
 
 class View(web.View):
 
+    @property
+    def view_class_name(self):
+        return self.__class__.__qualname__
+
     async def __handle_request(self, method):
         request_path = self._request._rel_url.path
         match_info = self._request._match_info
-        if match_info:
-            lookup_path = match_info._route._resource._formatter
-        else:
-            lookup_path = request_path
-        app_conf = self._request.app['AIOFRAME_SETTINGS']['app_views'][self.__class__.__qualname__]['app_conf']
+        lookup_path = get_reverse_match(match_info) if match_info else request_path
+        print(lookup_path)
+        app_conf = self._request.app['AIOFRAME_SETTINGS']['app_views'][self.view_class_name]['app_conf']
         try:
-            view = app_conf.get_views(self.__class__.__qualname__)[lookup_path]
+            view = app_conf.get_views(self.view_class_name)[lookup_path]
         except KeyError:
             raise web.HTTPNotFound
         if method not in view['methods']:

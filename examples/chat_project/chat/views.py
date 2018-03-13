@@ -5,6 +5,7 @@ from aiohttp_session import get_session
 from aioframe.auth.utils import get_user_by_session, get_identity
 from aioframe.views import TemplateView, WebsocketView
 from aioframe.clients import get_request
+from aioframe.apps.routes import get_url
 
 import random
 import markovify
@@ -57,7 +58,7 @@ class ChatBot:
                 response['msg'] = 'Error: valid commands are "markovify" and "talk"'
         return response
 
-@app.route_class('chat/')
+@app.route_class()
 class ChatRoom(WebsocketView, TemplateView):
 
     async def get_bot_handler(self, ws_group, msg_data):
@@ -67,7 +68,7 @@ class ChatRoom(WebsocketView, TemplateView):
         response = await bot.handle_msg(msg_data)
         return response
 
-    @app.route('rooms/ws/{group_name}/')
+    @app.route('room/ws/{group_name}/', name='room_ws')
     async def ws_handler(self, *args, **kwargs):
         request = self._request
         response, ws_group = await self.get_ws_response()
@@ -86,18 +87,17 @@ class ChatRoom(WebsocketView, TemplateView):
                     await ws.send_str(msg_resp)
         return response
 
-    @app.route('rooms/{group_name}/')
+    @app.route('room/{group_name}/', name='room')
     async def room(self, *args, **kwargs):
         request = self._request
         group_name = request._match_info['group_name']
-        ws_route = '{}:{}/rooms/ws/{}/'.format(HOSTNAME, PORT, group_name)
+        ws_url = get_url(request, 'room_ws', kwargs={'group_name': group_name}, is_ws=True)
         session = await get_session(request)
         # user = await get_user_by_session(session)
         identity = await get_identity(session)
-        # Temp
         username = 'User ' + identity['_session_id'][:5]
         context = {
-            'ws_route': ws_route,
+            'ws_url': ws_url,
             'title': 'Chatroom {}'.format(group_name),
             'user': '<{}>'.format(username)
         }

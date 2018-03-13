@@ -28,6 +28,8 @@ APPS_REGISTRY = (
 
 HOSTNAME = 'localhost'
 PORT = '8000'
+URL_ROOT = 'http://localhost'
+WS_URL_ROOT = 'ws://localhost:8000'
 
 # Database
 

@@ -4,7 +4,8 @@ A web framework written using aiohttp.
 
 # Todo 
 
-- Auth backend
+- Decide on namespacing app view classes vs. registering the classes on load
+- More auth work
 - Helper methods
 - Base models
 - Query helper methods

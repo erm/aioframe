@@ -19,7 +19,7 @@
     <script type="text/javascript">
       $(document).ready(function() {
         var status = $('#status');
-        var ws = new WebSocket("ws://{{ ws_route }}");
+        var ws = new WebSocket("{{ ws_url }}");
         $('#message_input').on('keypress', function(e) {
             if(e.which == 13) {
               var msg = $('#message_input').val();

@@ -17,3 +17,8 @@ class SessionSecretKeyDoesNotExist(Exception):
     """
     A secret was not provided to the encrypted cookie session storage.
     """
+
+class AppRouteURLKeyError(KeyError):
+    """
+    An app route was constructed without required keyword match arguments.
+    """

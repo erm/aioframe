@@ -11,10 +11,10 @@ from chat_project import conf
 from .app_conf import app
 
 
-@app.route_class('auth/')
+@app.route_class()
 class Auth(TemplateView):
 
-    @app.route('login/', methods=['GET', 'POST'])
+    @app.route('login/', name='login', methods=['GET', 'POST'])
     async def login(self):
         request = self._request
         session = await get_session(request)
@@ -29,7 +29,7 @@ class Auth(TemplateView):
         context = {'form_errors': session.pop('form_errors', None)}
         return render_template('auth/login.html', request, context)
 
-    @app.route('signup/', methods=['GET', 'POST'])
+    @app.route('signup/', name='signup', methods=['GET', 'POST'])
     async def signup(self):
         request = self._request
         session = await get_session(request)
@@ -45,7 +45,7 @@ class Auth(TemplateView):
         context = {'form_errors': session.pop('form_errors', None)}
         return render_template('auth/signup.html', request, context)
 
-    @app.route('dashboard/')
+    @app.route('dashboard/', name='dashboard')
     async def dashboard(self):
         request = self._request
         session = await get_session(request)
