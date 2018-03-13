@@ -3,7 +3,6 @@ from importlib import import_module
 from pkgutil import walk_packages
 
 from .exceptions import AppModuleImportError
-from .apps import register_view
 
 
 def get_apps_enabled(apps_registry):
@@ -31,16 +30,14 @@ def get_app_modules(app_name):
 
 
 def load_apps_enabled(webapp, conf):
+    webapp['AIOFRAME_SETTINGS'] = {'conf': conf, 'app_views': {}}
     apps_enabled = get_apps_enabled(conf.APPS_REGISTRY)
     for app_name, app_module in apps_enabled.items():
         try:
             app_views = app_module.views.app_views
         except AttributeError:
             continue
-        for view in app_views:
-            register_view(app_module.app_conf.app, webapp, conf)(view)()
         app_module.app_conf.app.load_routes(webapp)
-
 
 def get_app_models(apps_enabled):
     models = []

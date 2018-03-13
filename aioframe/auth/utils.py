@@ -48,14 +48,14 @@ async def authenticate(session, conf, username, password):
     return res
 
 
-def login_required(func):
-    async def _login_required(request, *args, **kwargs):
-        session = await get_session(request)
-        if not session.get('AIOFRAME_AUTH_IDENTITY'):
-            raise aiohttp.web.HTTPForbidden
-        response = await func(request, *args, **kwargs)
-        return response
-    return _login_required
+# def login_required(func):
+#     async def _login_required(self, *args, **kwargs):
+#         session = await get_session(self._request)
+#         if not session.get('AIOFRAME_AUTH_IDENTITY'):
+#             raise aiohttp.web.HTTPForbidden
+#         response = await func(self, *args, **kwargs)
+#         return response
+#     return _login_required
 
 
 def create_user(username, password):
