@@ -11,7 +11,7 @@ import random
 import markovify
 
 from chat_project.conf import HOSTNAME, PORT, APPS_DIR
-from .app_conf import app
+from .apps import app
 
 
 @app.route_class()
@@ -87,4 +87,4 @@ class ChatBotRoom(WebsocketBotView, TemplateView):
         return render_template('chat/chat.html', request, context)
 
 
-app_views = [ChatRoom, ChatBotRoom]
+# app_views = [ChatRoom, ChatBotRoom]

@@ -8,7 +8,7 @@ from aioframe.views import View, TemplateView
 
 from chat_project import conf
 
-from .app_conf import app
+from .apps import app
 
 
 @app.route_class()
@@ -54,4 +54,4 @@ class Auth(TemplateView):
         return render_template('auth/dashboard.html', request, context)
 
 
-app_views = [Auth]
+# app_views = [Auth]

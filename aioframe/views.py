@@ -24,7 +24,7 @@ class View(web.View):
         request_path = self._request._rel_url.path
         match_info = self._request._match_info
         lookup_path = get_reverse_match(match_info) if match_info else request_path
-        app_conf = self._request.app['AIOFRAME_SETTINGS']['app_views'][self.view_class_name]['app_conf']
+        app_conf = self._request.app['AIOFRAME_SETTINGS']['AIOFRAME_APPS'][self.view_class_name]['APP_CONF']
         try:
             view = app_conf.get_views(self.view_class_name)[lookup_path]
         except KeyError:
@@ -51,7 +51,7 @@ class TemplateView(View):
         aiohttp_jinja2.setup(
             self._request.app,
             loader=jinja2.FileSystemLoader(os.path.join(
-                self._request.app['AIOFRAME_SETTINGS']['conf'].APPS_DIR, 'templates'))
+                self._request.app['AIOFRAME_SETTINGS']['AIOFRAME_CONF'].APPS_DIR, 'templates'))
         )
 
 
@@ -65,8 +65,8 @@ class WebsocketView(View):
         except KeyError:
             self._request.app['socket_groups'] = {
                 self.ws_group_name: {
-                    'name': self.ws_group_name, 
-                    'sockets': [], 
+                    'name': self.ws_group_name,
+                    'sockets': [],
                     'data': {},
                     'bot': None
                 }

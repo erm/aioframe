@@ -7,7 +7,7 @@ def get_url(request, name, kwargs={}, is_ws=False):
         resource_path = resource.url_for(**kwargs) if kwargs else resource.url_for()
     except KeyError as e:
         raise AppRouteURLKeyError(e)
-    conf = request.app['AIOFRAME_SETTINGS']['conf']
+    conf = request.app['AIOFRAME_SETTINGS']['AIOFRAME_CONF']
     if is_ws:
         url = '{}{}'.format(conf.WS_URL_ROOT, resource_path)
     else:

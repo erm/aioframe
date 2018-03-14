@@ -2,18 +2,7 @@ import sys
 from importlib import import_module
 from pkgutil import walk_packages
 
-from .exceptions import AppModuleImportError
-
-
-def get_apps_enabled(apps_registry):
-    apps_enabled = {}
-    for app_name in apps_registry:
-        try:
-            app_module = import_module(app_name)
-        except ImportError as e:
-            raise AppModuleImportError(e)
-        apps_enabled[app_name] = app_module
-    return apps_enabled
+from ..exceptions import AppModuleImportError
 
 
 def get_app_modules(app_name):
@@ -28,16 +17,6 @@ def get_app_modules(app_name):
             raise AppModuleImportError('{}: {}'.format(module_pkg, e))
     return [sub_modules.keys()]
 
-
-def load_apps_enabled(webapp, conf):
-    webapp['AIOFRAME_SETTINGS'] = {'conf': conf, 'app_views': {}}
-    apps_enabled = get_apps_enabled(conf.APPS_REGISTRY)
-    for app_name, app_module in apps_enabled.items():
-        try:
-            app_views = app_module.views.app_views
-        except AttributeError:
-            continue
-        app_module.app_conf.app.load_routes(webapp)
 
 def get_app_models(apps_enabled):
     models = []

@@ -1,5 +1,5 @@
 import sys
-from aioframe.loaders import get_app_modules
+from aioframe.apps.loaders import get_app_modules
 
 sys.path.insert(0,'..')
 

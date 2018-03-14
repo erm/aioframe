@@ -28,9 +28,9 @@ class AppConf:
             return func
         return _route
 
-    def load_routes(self, webapp):
+    def setup(self, webapp):
         for name, _dict in self.view_classes.items():
-            webapp['AIOFRAME_SETTINGS']['app_views'][name] = {'app_conf': self}
+            webapp['AIOFRAME_SETTINGS']['AIOFRAME_APPS'][name] = {'APP_CONF': self}
             view_class = _dict['view_class']
             _views = _dict['views']
             for route_path, route_dict in _views.items():
